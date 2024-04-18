@@ -1,0 +1,35 @@
+/* AuthenticatedAdminHome.css */
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: rgb(255, 255, 255); /* Adjust the transparency (last value) as needed */
+    backdrop-filter: blur(5px); /* Adjust the blur strength as needed */
+    box-sizing: border-box;
+    background-color: rgb(144, 166, 255);
+}
+
+.adminhomecontent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    justify-content: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: rgb(105, 135, 255);/* Light green background with transparency */
+    backdrop-filter: blur(50px); /* Blurred background effect */
+    padding-bottom: 20px;
+    padding-top: 20px;
+    box-shadow: 0px 0px 10px 0px #000; 
+}
+
+.footer {
+    margin-top: auto; /* Push the footer to the bottom */
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}

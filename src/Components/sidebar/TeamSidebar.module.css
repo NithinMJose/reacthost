@@ -1,0 +1,25 @@
+.sidebar {
+  background-color: #43a3e3; /* Light blue background for the entire sidebar */
+  color: #333333; /* Dark text for better contrast */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+  backdrop-filter: blur(50px); /* Blurry effect */
+}
+
+.listItem {
+  background: rgba(158, 220, 255, 0.3); /* Transparent gradient background for list items */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  border: none; /* No border needed for this design */
+  box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+  border-radius: 4px; /* Rounded corners for list items */
+  margin-bottom: 8px; /* Space between items */
+}
+
+.listItem:hover {
+  transform: scale(1.05); /* Scale up slightly on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Add shadow on hover */
+}
+
+.collapsedSection,
+.activeSection {
+  background: rgba(158, 220, 255, 0.3); /* Transparent gradient for collapsed and active sections */
+}
