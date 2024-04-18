@@ -1,0 +1,35 @@
+.add-driver-page {
+  background-color: #f7f7f7;
+  min-height: 100vh;
+}
+
+.add-driver-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.add-driver-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-driver-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-driver-input {
+  margin-bottom: 20px;
+}
+
+.add-driver-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.add-driver-submit-button {
+  width: 150px;
+}
