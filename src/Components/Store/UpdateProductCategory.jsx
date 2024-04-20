@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminNavbar from '../LoginSignup/AdminNavbar';
 import { toast } from 'react-toastify';
@@ -14,30 +14,28 @@ import {
   Grid,
   Paper,
 } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { BASE_URL } from '../../config';
 
 const UpdateProductCategory = () => {
   const location = useLocation();
-  const { state } = location;
   const navigate = useNavigate();
-  const productCategoryId = parseInt(state.productCategoryId);
+  const productCategoryId = parseInt(location.pathname.split('/').pop(), 10);
 
   const [productCategoryData, setProductCategoryData] = useState({
     pCategoryName: '',
     imagePath: '',
     imageFile: null,
   });
-
   const [pCategoryNameError, setPCategoryNameError] = useState('');
 
   useEffect(() => {
     axios
-      .get(`https://localhost:7092/api/ProductCategory/GetProductCategoryById?id=${productCategoryId}`)
+      .get(`${BASE_URL}/api/ProductCategory/GetProductCategoryById?id=${productCategoryId}`)
       .then((response) => {
         const imageData = response.data;
         setProductCategoryData({
           ...imageData,
-          imagePath: `https://localhost:7092/images/${imageData.imagePath}` // Assuming the image path returned from the backend is relative
+          imagePath: `${BASE_URL}/{imageData.imagePath}`
         });
       })
       .catch((error) => {
@@ -73,17 +71,15 @@ const UpdateProductCategory = () => {
     }
     
     const formData = new FormData();
-    formData.append('ProductCategoryId', productCategoryId); // Change to match backend parameter name
+    formData.append('ProductCategoryId', productCategoryId); 
     formData.append('PCategoryName', productCategoryData.pCategoryName);
     
     if (productCategoryData.imageFile) {
       formData.append('ImageFile', productCategoryData.imageFile);
     }
 
-  
-    
     axios
-      .put(`https://localhost:7092/api/ProductCategory/UpdateProductCategory?id=${productCategoryId}`, formData) // Pass id as query parameter
+      .put(`https://localhost:7092/api/ProductCategory/UpdateProductCategory?id=${productCategoryId}`, formData)
       .then((response) => {
         console.log(response)
         toast.success('Update successful');
@@ -152,8 +148,7 @@ const UpdateProductCategory = () => {
 
 <Grid item xs={12}>
   <input type="file" accept="image/*" onChange={handleImageUpload} />
-</Grid>
-{/* Display existing image */}
+            </Grid>
 <Grid item xs={12}>
   {productCategoryData.imagePath && (
     <img

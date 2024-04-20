@@ -204,7 +204,7 @@ function App() {
           <Route path='/TeamViewProfile' element={ <TeamViewProfile />} />
           <Route path='/AddProductCategory' element={ <AddProductCategory />} />
           <Route path='/ProductCategoryList' element={ <ProductCategoryList />} />
-          <Route path='/UpdateProductCategory' element={ <UpdateProductCategory />} />
+          <Route path='/UpdateProductCategory/:productCategoryId' element={<UpdateProductCategory />} />
           <Route path='/AddDriverTeam' element={ <AddDriverTeam />} />
           <Route path='/DriverListTeam' element={ <DriverListTeam />} />
           <Route path='/TeamHistoryListTeam' element={ <TeamHistoryListTeam />} />

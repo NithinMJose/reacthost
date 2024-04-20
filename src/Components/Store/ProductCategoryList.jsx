@@ -61,12 +61,14 @@ const ProductCategoryList = () => {
       return <p>Loading product categories...</p>;
     }
 
+    let serialNumber = 1;
+
     return (
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: '5%' }}>ID</TableCell>
+              <TableCell style={{ width: '5%' }}>S.No.</TableCell>
               <TableCell style={{ width: '30%' }}>Category Name</TableCell>
               <TableCell style={{ width: '40%' }}>Image</TableCell>
               <TableCell style={{ width: '25%' }}>Manage</TableCell>
@@ -75,7 +77,7 @@ const ProductCategoryList = () => {
           <TableBody>
             {productCategories.map((category) => (
               <TableRow key={category.productCategoryId}>
-                <TableCell>{category.productCategoryId}</TableCell>
+                <TableCell>{serialNumber++}</TableCell>
                 <TableCell>{category.pCategoryName}</TableCell>
                 <TableCell>
                   {category.imagePath ? (
@@ -107,6 +109,7 @@ const ProductCategoryList = () => {
       </TableContainer>
     );
   };
+
 
   return (
     <div className="product-category-list-page">
