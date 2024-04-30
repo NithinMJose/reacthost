@@ -10,6 +10,8 @@ import { BASE_URL } from '../../config';
 const CornerListAdmin = () => {
   const navigate = useNavigate();
   const [cornerData, setCornerData] = useState(null);
+  const [seasonData, setSeasonData] = useState(null);
+  const [selectedSeason, setSelectedSeason] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
@@ -39,6 +41,21 @@ const CornerListAdmin = () => {
             toast.error('An error occurred while fetching corner data');
           }
         });
+
+      axios
+        .get(`${BASE_URL}/api/Season/GetSeasons`)
+        .then((response) => {
+          console.log('Season data:', response.data);
+          const sortedSeasonData = response.data.sort((a, b) => a.year - b.year);
+          setSeasonData(sortedSeasonData);
+          if (sortedSeasonData && sortedSeasonData.length > 0) {
+            setSelectedSeason(sortedSeasonData[0].year.toString());
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching season data:', error);
+          toast.error('An error occurred while fetching season data');
+        });
     } catch (error) {
       console.error('An error occurred while decoding the token:', error);
       toast.error('An error occurred while decoding the token');
@@ -46,9 +63,30 @@ const CornerListAdmin = () => {
     }
   }, [navigate]);
 
+  const handleManageCorner = (cornerId) => {
+    navigate(`/EditCorner`, { state: { cornerId } });
+  };
+
+  const handleSeasonChange = (event) => {
+    setSelectedSeason(event.target.value);
+  };
+
   const renderCornerData = () => {
-    if (!cornerData) {
+    if (!cornerData || !selectedSeason) {
       return <p>Loading corner data...</p>;
+    }
+
+    let serialNumber = 1;
+
+    // Filter cornerData based on the selected season year
+    console.log("Season year", selectedSeason);
+    console.log("season Year", cornerData[0].seasonYear);
+    const filteredCornerData = cornerData.filter(
+      (corner) => corner.seasonYear === parseInt(selectedSeason)
+    );
+
+    if (filteredCornerData.length === 0) {
+      return <p>No data available for the selected season.</p>;
     }
 
     return (
@@ -56,22 +94,22 @@ const CornerListAdmin = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell style={{ width: '5%' }}>Corner ID</TableCell>
+              <TableCell style={{ width: '5%' }}>SL No</TableCell>
               <TableCell style={{ width: '15%' }}>Corner Number</TableCell>
               <TableCell style={{ width: '15%' }}>Corner Capacity</TableCell>
-              <TableCell style={{ width: '15%' }}>Race ID</TableCell>
+              <TableCell style={{ width: '15%' }}>Season</TableCell>
               <TableCell style={{ width: '20%' }}>Race Name</TableCell>
               <TableCell style={{ width: '15%' }}>Available Capacity</TableCell>
               <TableCell style={{ width: '15%' }}>Manage</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {cornerData.map((corner) => (
+            {filteredCornerData.map((corner) => (
               <TableRow key={corner.cornerId}>
-                <TableCell>{corner.cornerId}</TableCell>
+                <TableCell>{serialNumber++}</TableCell>
                 <TableCell>{corner.cornerNumber}</TableCell>
                 <TableCell>{corner.cornerCapacity}</TableCell>
-                <TableCell>{corner.raceId}</TableCell>
+                <TableCell>{corner.seasonYear}</TableCell>
                 <TableCell>{corner.race ? corner.race.raceName : ''}</TableCell>
                 <TableCell>{corner.availableCapacity}</TableCell>
                 <TableCell>
@@ -91,9 +129,6 @@ const CornerListAdmin = () => {
     );
   };
 
-  const handleManageCorner = (cornerId) => {
-    navigate(`/EditCorner`, { state: { cornerId } });
-  };
 
   return (
     <div className="cornerlistadmin">
@@ -103,11 +138,23 @@ const CornerListAdmin = () => {
       <br />
       <br />
       <h1>Corner List</h1>
+      <div className="SeasonAndRaceSelection">
+        <p style={{ display: 'inline-block', marginRight: '10px' }}>Select Season: </p>
+        <select value={selectedSeason} onChange={handleSeasonChange} style={{ display: 'inline-block' }}>
+          {seasonData &&
+            seasonData.map((season) => (
+              <option key={season.seasonId} value={season.year.toString()}>
+                {season.year}
+              </option>
+            ))}
+        </select>
+      </div>
       {renderCornerData()}
       <br />
       <Footer />
     </div>
   );
+
 };
 
 export default CornerListAdmin;

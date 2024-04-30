@@ -1,15 +1,17 @@
-// TBCategory.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UserNavbar from '../LoginSignup/UserNavbar';
 import Footer from '../LoginSignup/Footer';
+import { css } from '@emotion/react';
+import { BeatLoader } from 'react-spinners';
 import { BASE_URL } from '../../config';
 
 const TBCategory = () => {
   const location = useLocation();
   const { state } = location;
   const [ticketCategories, setTicketCategories] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +29,8 @@ const TBCategory = () => {
         setTicketCategories(data);
       } catch (error) {
         console.error('Error fetching ticket categories:', error);
+      } finally {
+        setLoading(false); // Set loading to false when data fetching is done
       }
     };
 
@@ -46,6 +50,29 @@ const TBCategory = () => {
     // Navigate to the TBConfirm page and pass the necessary values
     navigate('/TBConfirm', { replace: true, state: { cornerId, selectedTickets, ticketCategoryId, ticketPrice } });
   };
+
+  const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+  `;
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div>
+          <UserNavbar />
+          <br />
+          <br />
+          <br />
+          <br />
+          <p>We are loading ticket categories. Hang On!</p>
+          <BeatLoader color={'#123abc'} loading={loading} css={override} size={30} /> {/* Adjust size here */}
+          <Footer />
+        </div>
+      </div>
+    );
+  }
 
   if (!ticketCategories) {
     return <p>No ticket categories available.</p>;

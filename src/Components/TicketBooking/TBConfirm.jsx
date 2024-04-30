@@ -227,7 +227,7 @@ useEffect(() => {
   };
 
   if (!confirmationData) {
-    return <p>No data available for confirmation.</p>;
+    return <p></p>;
   }
 
   const handlePayment = async () => {

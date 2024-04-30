@@ -1,9 +1,10 @@
-// TBCorner.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Footer from '../LoginSignup/Footer';
 import UserNavbar from '../LoginSignup/UserNavbar';
+import { css } from '@emotion/react';
+import { BeatLoader } from 'react-spinners';
 import { BASE_URL } from '../../config';
 
 const TBCorner = () => {
@@ -12,6 +13,7 @@ const TBCorner = () => {
   const { state } = location;
   const [corners, setCorners] = useState(null);
   const [selectedTickets, setSelectedTickets] = useState(1);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate();
   console.log('Unique Race Name:', uniqueRaceName);
 
@@ -28,6 +30,8 @@ const TBCorner = () => {
         console.log('Fetched Corner Data:', fetchedCorners);
       } catch (error) {
         console.error('Error fetching corners:', error);
+      } finally {
+        setLoading(false); // Set loading to false when data fetching is done
       }
     };
     
@@ -43,6 +47,29 @@ const TBCorner = () => {
     const selectedValue = parseInt(event.target.value, 10);
     setSelectedTickets(selectedValue);
   };
+
+  const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+  `;
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div>
+          <UserNavbar />
+          <br />
+          <br />
+          <br />
+          <br />
+          <p>We are loading corner data. Hang On!</p>
+          <BeatLoader color={'#123abc'} loading={loading} css={override} size={30} /> {/* Adjust size here */}
+          <Footer />
+        </div>
+      </div>
+    );
+  }
 
   if (!corners) {
     return <p>No corners available for the selected race.</p>;
