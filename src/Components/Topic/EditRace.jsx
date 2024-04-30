@@ -5,6 +5,8 @@ import AdminNavbar from '../LoginSignup/AdminNavbar';
 import Footer from '../LoginSignup/Footer';
 import axios from 'axios';
 import { BASE_URL } from '../../config';
+import { to } from 'react-spring';
+import { toast } from 'materialize-css';
 
 const EditRace = () => {
   const location = useLocation();
@@ -14,14 +16,14 @@ const EditRace = () => {
   const [race, setRace] = useState({
     raceId: null,
     raceName: '',
-    seasonId: '', // Change type to string
-    raceDate: '', // Change date format to dd/mm/yyyy
+    seasonYear: '', // Updated to seasonYear
+    raceDate: '',
     raceLocation: '',
     imageFile: null,
   });
 
   const [raceNameError, setRaceNameError] = useState('');
-  const [seasonIdError, setSeasonIdError] = useState('');
+  const [seasonYearError, setSeasonYearError] = useState(''); // Updated to seasonYearError
   const [raceDateError, setRaceDateError] = useState('');
   const [raceLocationError, setRaceLocationError] = useState('');
   const [imageFileError, setImageFileError] = useState('');
@@ -32,8 +34,9 @@ const EditRace = () => {
         const response = await axios.get(`${BASE_URL}/api/Race/GetRaceById?id=${state.raceId}`);
         setRace({
           ...response.data,
-          raceDate: new Date(response.data.raceDate).toISOString().split('T')[0], // Format date as yyyy-mm-dd
+          raceDate: new Date(response.data.raceDate).toISOString().split('T')[0],
         });
+        console.log('The data is:', response.data);
       } catch (error) {
         console.error('Error fetching race:', error);
       }
@@ -51,8 +54,8 @@ const EditRace = () => {
       case 'raceName':
         validateRaceName(value);
         break;
-      case 'seasonId':
-        validateSeasonId(value);
+      case 'seasonYear':
+        validateSeasonYear(value); // Updated to seasonYear
         break;
       case 'raceDate':
         validateRaceDate(value);
@@ -73,19 +76,27 @@ const EditRace = () => {
     }
   };
 
-  const validateSeasonId = (value) => {
-    if (!value || !value.trim) {
-      setSeasonIdError('Season ID is required');
+  const validateSeasonYear = (value) => {
+    if (!isPositiveInteger(value) || value.length !== 4 || value.trim().length === 0 || value < 1700 || value > 2500) {
+      setSeasonYearError('Season Year must be a positive integer and 4 digits long and between 1700 and 2500');
     } else {
-      setSeasonIdError('');
+      setSeasonYearError('');
     }
   };
-  
+
+  function isPositiveInteger(n) {
+    return n > 0 && Number.isInteger(Number(n));
+  }
 
   const validateRaceDate = (value) => {
     if (!value) {
       setRaceDateError('Race Date is required');
-    } else {
+    }// check if the year value does not match with the selected season year
+    if (new Date(value).getFullYear() !== parseInt(race.seasonYear)) {
+      setRaceDateError('Please select a valid date matching the selected season year');
+    }
+
+    else {
       setRaceDateError('');
     }
   };
@@ -100,7 +111,7 @@ const EditRace = () => {
 
   const validateImageFile = (file) => {
     if (!file) {
-      setImageFileError('Image file is required');
+      setImageFileError('');
     } else {
       const allowedExtensions = ['png', 'jpg'];
       const extension = file.name.split('.').pop().toLowerCase();
@@ -116,13 +127,13 @@ const EditRace = () => {
   const handleUpdate = async () => {
     // Validate fields
     validateField('raceName', race.raceName);
-    validateField('seasonId', race.seasonId);
+    validateField('seasonYear', race.seasonYear); 
     validateField('raceDate', race.raceDate);
     validateField('raceLocation', race.raceLocation);
     validateImageFile(race.imageFile);
 
     // If any validation fails, return without updating
-    if (raceNameError || seasonIdError || raceDateError || raceLocationError || imageFileError) {
+    if (raceNameError || seasonYearError || raceDateError || raceLocationError || imageFileError) {
       return;
     }
 
@@ -130,10 +141,11 @@ const EditRace = () => {
       const formData = new FormData();
       formData.append('raceId', race.raceId);
       formData.append('raceName', race.raceName);
-      formData.append('seasonId', race.seasonId);
+      formData.append('seasonYear', race.seasonYear); // Updated to seasonYear
       formData.append('raceDate', race.raceDate);
       formData.append('raceLocation', race.raceLocation);
       formData.append('imageFile', race.imageFile);
+
 
       const response = await axios.put(`${BASE_URL}/api/Race/UpdateRace`, formData, {
         headers: {
@@ -176,15 +188,15 @@ const EditRace = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Season ID"
+                label="Season Year"
                 fullWidth
-                value={race.seasonId}
+                value={race.seasonYear}
                 onChange={(e) => {
-                  setRace({ ...race, seasonId: e.target.value });
-                  validateSeasonId(e.target.value);
+                  setRace({ ...race, seasonYear: e.target.value });
+                  validateSeasonYear(e.target.value);
                 }}
-                error={Boolean(seasonIdError)}
-                helperText={seasonIdError}
+                error={Boolean(seasonYearError)}
+                helperText={seasonYearError}
               />
             </Grid>
             <Grid item xs={12}>

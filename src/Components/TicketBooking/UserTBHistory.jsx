@@ -14,13 +14,14 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Grid,
 } from '@mui/material';
 import UserNavbar from '../LoginSignup/UserNavbar';
 import Footer from '../LoginSignup/Footer';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../config';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const UserTBHistory = () => {
   const [ticketBookingHistory, setTicketBookingHistory] = useState([]);
@@ -84,12 +85,68 @@ const UserTBHistory = () => {
   };
 
   const handlePrintTicket = (booking) => {
-    alert(`Printing the ticket for Booking ID: ${booking.ticketBookingId}`);
+    const doc = new jsPDF();
+
+    //make a gray color for the header background
+    doc.setFillColor(211, 211, 211);
+    doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
+    doc.setFontSize(16);
+    doc.text('Formula One Fan Hub', 15, 15, { align: 'left' });
+    doc.setFontSize(12);
+    doc.text('The One Stop Shop for F1 Fans', 15, 25, { align: 'left' });
+
+
+
+    const tableRows = [
+      ['Field', 'Value'],
+      ['Unique ID', booking.uniqueId || '-'],
+      ['Receipt Number', booking.receiptNumber || '-'],
+      ['Number of Tickets Booked', booking.numberOfTicketsBooked],
+      ['Booking Date', new Date(booking.bookingDate).toLocaleString()],
+      ['Total Amount', `$${booking.totalAmount}`],
+      ['Payment Status', booking.paymentStatus],
+      ['Payment Date', booking.paymentDate ? new Date(booking.paymentDate).toLocaleString() : '-'],
+      ['Confirmation Number', booking.confirmationNumber || '-'],
+      ['Booking Status', booking.bookingStatus],
+      ['First Name', booking.firstName],
+      ['Last Name', booking.lastName],
+      ['Address', booking.address],
+      ['Email', booking.email],
+      ['Phone Contact', booking.phoneContact],
+      ['Race Name', booking.raceName || '-'],
+      ['Corner Number', booking.cornerNumber || '-'],
+      ['Year', booking.year || '-'],
+      ['Category Name', booking.categoryName || '-'],
+    ];
+
+    doc.autoTable({
+      head: tableRows.slice(0, 1), // Display only the header row
+      body: tableRows.slice(1),    // Display the data rows
+      startY: 35,  // Set the y position for the table
+      theme: 'grid',  // Set the theme for the table
+    });
+
+    // make the footer background color gray
+    doc.setFillColor(211, 211, 211);
+    doc.rect(0, doc.internal.pageSize.height - 30, doc.internal.pageSize.width, 30, 'F');
+    doc.setFontSize(12);
+    doc.text('Thank you for booking with us!', 15, doc.internal.pageSize.height - 15, { align: 'left' });
+    const quote = "Life is a race. Keep moving forward with passion and determination.";
+    doc.setFontSize(10);
+    doc.text(quote, 105, doc.internal.pageSize.height - 5, { align: 'center' });
+
+    doc.save(`Ticket_Details_${booking.ticketBookingId}.pdf`);
   };
+
+
 
   return (
     <div>
       <UserNavbar />
+      <br />
+      <br />
+      <br />
+      <br />
       <Container sx={{ marginTop: 4 }}>
         <Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
           <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>

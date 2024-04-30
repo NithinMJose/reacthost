@@ -19,11 +19,13 @@ import TeamSidebar from '../sidebar/TeamSidebar';
 import TeamNavbar from '../LoginSignup/Team/TeamNavbar';
 import Footer from '../LoginSignup/Footer';
 import { BASE_URL } from '../../config';
+import './UpdateProductTeam.css';
 
 const UpdateProductTeam = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const productId = location.state.productId;
+  const [numberOfImages, setNumberOfImages] = useState(0);
 
   const [productData, setProductData] = useState({
     productName: '',
@@ -31,7 +33,6 @@ const UpdateProductTeam = () => {
     price: 0,
     stockQuantity: 0,
     productCategoryId: 0,
-    // discountAmount: 0,
     imagePath1: '',
     imageFile1: null,
     imagePath2: '',
@@ -75,7 +76,6 @@ const UpdateProductTeam = () => {
       .get(`${BASE_URL}/api/Product/GetProductById?id=${productId}`)
       .then((response) => {
         setProductData(response.data);
-        //      console.log("HHHHHHHHHHHHHHHHHHHHH : ", response.data);
       })
       .catch((error) => {
         console.error('Error fetching product data:', error);
@@ -84,7 +84,6 @@ const UpdateProductTeam = () => {
 
   const handleFieldChange = (field, value) => {
     setProductData((prevData) => ({ ...prevData, [field]: value }));
-    // Clear previous errors when the user starts typing
     setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
   };
 
@@ -98,46 +97,15 @@ const UpdateProductTeam = () => {
 
     const imageUrl = URL.createObjectURL(file);
 
-    switch (imageNumber) {
-      case 1:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile1: file,
-          newImageSelected1: true,
-          newImageUrl1: imageUrl,
-        }));
-        break;
-      case 2:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile2: file,
-          newImageSelected2: true,
-          newImageUrl2: imageUrl,
-        }));
-        break;
-      case 3:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile3: file,
-          newImageSelected3: true,
-          newImageUrl3: imageUrl,
-        }));
-        break;
-      case 4:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile4: file,
-          newImageSelected4: true,
-          newImageUrl4: imageUrl,
-        }));
-        break;
-      default:
-        break;
-    }
+    setProductData((prevData) => ({
+      ...prevData,
+      [`imageFile${imageNumber}`]: file,
+      [`newImageSelected${imageNumber}`]: true,
+      [`newImageUrl${imageNumber}`]: imageUrl,
+    }));
   };
 
   const handleUpdateClick = () => {
-    // Validation
     let formIsValid = true;
     const newErrors = {};
 
@@ -173,21 +141,13 @@ const UpdateProductTeam = () => {
     formData.append('price', productData.price);
     formData.append('teamId', productData.teamId);
     formData.append('stockQuantity', productData.stockQuantity);
-    //formData.append('discountAmount', productData.discountAmount);
     formData.append('productCategoryId', productData.productCategoryId);
     formData.append('isActive', productData.isActive);
 
-    if (productData.imageFile1) {
-      formData.append('imageFile1', productData.imageFile1);
-    }
-    if (productData.imageFile2) {
-      formData.append('imageFile2', productData.imageFile2);
-    }
-    if (productData.imageFile3) {
-      formData.append('imageFile3', productData.imageFile3);
-    }
-    if (productData.imageFile4) {
-      formData.append('imageFile4', productData.imageFile4);
+    for (let i = 1; i <= 4; i++) {
+      if (productData[`imageFile${i}`]) {
+        formData.append(`imageFile${i}`, productData[`imageFile${i}`]);
+      }
     }
 
     axios
@@ -201,6 +161,7 @@ const UpdateProductTeam = () => {
         toast.error('Error updating product data');
       });
   };
+
 
   return (
     <div className="productlistpage">
@@ -276,6 +237,29 @@ const UpdateProductTeam = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+                  {/* Display the existing images */}
+                  <Typography variant="h6" gutterBottom style={{ marginLeft: "20px" }}>existing images</Typography>
+                  <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div className="ImageContainer">
+                      <div className="Image1">
+                        <p>Image1</p>
+                        <img src={productData.imagePath1} alt="Product Image 1" className="product-image" />
+                      </div>
+                      <div className="Image2">
+                        <p>Image2</p>
+                        <img src={productData.imagePath2} alt="Product Image 2" className="product-image" />
+                      </div>
+                      <div className="Image3">
+                        <p>Image3</p>
+                        <img src={productData.imagePath3} alt="Product Image 3" className="product-image" />
+                      </div>
+                      <div className="Image4">
+                        <p>Image4</p>
+                        <img src={productData.imagePath4} alt="Product Image 4" className="product-image" />
+                      </div>
+                    </div>
+                  </Grid>
+
                   {[1, 2, 3, 4].map((number) => (
                     <Grid item xs={12} key={number}>
                       <input
@@ -284,26 +268,19 @@ const UpdateProductTeam = () => {
                         onChange={(e) => handleImageUpload(e, number)}
                       />
                       {productData[`newImageSelected${number}`] && (
-                        <Typography variant="subtitle1">New Image selected, replacing the existing</Typography>
-                      )}
-                      {productData[`newImageUrl${number}`] && (
-                        <img
-                          src={productData[`newImageUrl${number}`]}
-                          alt={`Product Image ${number}`}
-                          className="product-image"
-                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                        />
-                      )}
-                      {productData[`imagePath${number}`] && (
-                        <img
-                          src={`${BASE_URL}/images/${productData[`imagePath${number}`]}`}
-                          alt={`Product Image ${number}`}
-                          className="product-image"
-                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                        />
+                        <>
+                          <Typography variant="subtitle1">New Image selected, replacing the existing</Typography>
+                          <img
+                            src={productData[`newImageUrl${number}`]}
+                            alt={`Product Image ${number}`}
+                            className="product-image"
+                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                          />
+                        </>
                       )}
                     </Grid>
                   ))}
+
                   <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>Active</InputLabel>

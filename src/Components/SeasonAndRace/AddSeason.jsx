@@ -10,6 +10,7 @@ import {
   Container,
   Paper,
   Grid,
+  CircularProgress,
 } from '@mui/material';
 import AdminNavbar from '../LoginSignup/AdminNavbar';
 import Footer from '../LoginSignup/Footer';
@@ -82,11 +83,6 @@ const AddSeason = () => {
   };
 
   const handleSave = async () => {
-    console.log('Form Data:', {
-      year,
-      champion: champion || 'NotYetDecided',
-      imageFile,
-    });
     if (validateForm()) {
       setLoading(true);
 
@@ -210,7 +206,7 @@ const AddSeason = () => {
               onClick={handleSave}
               disabled={loading}
             >
-              {loading ? 'Adding...' : 'Add Season'}
+              {loading ? <CircularProgress size={24} /> : 'Add Season'}
             </Button>
           </form>
         </Paper>

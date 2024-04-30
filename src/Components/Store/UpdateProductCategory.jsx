@@ -35,14 +35,13 @@ const UpdateProductCategory = () => {
         const imageData = response.data;
         setProductCategoryData({
           ...imageData,
-          imagePath: `${BASE_URL}/{imageData.imagePath}`
+          imagePath: imageData.imagePath, // No need for {BASE_URL} as it's already a full URL
         });
       })
       .catch((error) => {
         console.error('Error fetching product category data:', error);
       });
   }, [productCategoryId]);
-  
 
   const handleFieldChange = (field, value) => {
     setProductCategoryData((prevData) => ({ ...prevData, [field]: value }));
@@ -69,19 +68,18 @@ const UpdateProductCategory = () => {
       toast.error('Check all input fields and apply again');
       return;
     }
-    
+
     const formData = new FormData();
-    formData.append('ProductCategoryId', productCategoryId); 
     formData.append('PCategoryName', productCategoryData.pCategoryName);
-    
+
     if (productCategoryData.imageFile) {
       formData.append('ImageFile', productCategoryData.imageFile);
     }
 
     axios
-      .put(`https://localhost:7092/api/ProductCategory/UpdateProductCategory?id=${productCategoryId}`, formData)
+      .put(`${BASE_URL}/api/ProductCategory/UpdateProductCategory?id=${productCategoryId}`, formData)
       .then((response) => {
-        console.log(response)
+        console.log(response);
         toast.success('Update successful');
         navigate('/ProductCategoryList');
       })
@@ -90,8 +88,6 @@ const UpdateProductCategory = () => {
         toast.error('Error updating product category data');
       });
   };
-  
-  
 
   const validateField = (field, value) => {
     switch (field) {
@@ -144,26 +140,23 @@ const UpdateProductCategory = () => {
                 helperText={pCategoryNameError}
               />
             </Grid>
-            
 
-<Grid item xs={12}>
-  <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <Grid item xs={12}>
+              <input type="file" accept="image/*" onChange={handleImageUpload} />
             </Grid>
-<Grid item xs={12}>
-  {productCategoryData.imagePath && (
-    <img
-      src={productCategoryData.imagePath}
-      alt="Existing Image"
-      style={{
-        width: '200px', // Adjust width as needed
-        height: '200px', // Adjust height as needed
-        marginTop: '10px'
-      }}
-    />
-  )}
-</Grid>
-
-
+            <Grid item xs={12}>
+              {productCategoryData.imagePath && (
+                <img
+                  src={productCategoryData.imagePath}
+                  alt="Existing Image"
+                  style={{
+                    width: '200px', // Adjust width as needed
+                    height: '200px', // Adjust height as needed
+                    marginTop: '10px'
+                  }}
+                />
+              )}
+            </Grid>
           </Grid>
           <Button
             variant="contained"

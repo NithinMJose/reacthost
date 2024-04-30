@@ -224,7 +224,7 @@ const UserCart = () => {
                     <div className="cart-item-content">
                       <div className="imageContainers">
                         <img
-                          src={`${BASE_URL}/images/${productDetails[item.productId]?.imagePath1}`}
+                          src={productDetails[item.productId]?.imagePath1}
                           alt={productDetails[item.productId]?.productName}
                           className="product-image"
                           onClick={() => handleProductDetailClick(item.productId)}

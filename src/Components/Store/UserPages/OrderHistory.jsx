@@ -88,7 +88,7 @@ const OrderHistory = () => {
       <UserNavbar />
       <div className="order-history-container">
         <div className="sidebar">
-          <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', textAlign: 'center', margin: '20px 0' }}>Sidebar</Typography>
+          <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', textAlign: 'center', margin: '20px 0' }}></Typography>
           <div className="search-container">
             <input
               type="text"
@@ -184,7 +184,7 @@ const OrderHistory = () => {
                         <div className="productDetails" key={index}>
                           <div className="product-content">
                             <div className="product-image-container">
-                              <img src={`${BASE_URL}/images/${item.productImagePath}`} alt="Product" className="product-image" />
+                              <img src={item.productImagePath} alt="Product" className="product-image" />
                             </div>
                             <div className="product-info-container">
                               {/* Additional product info can be displayed here if needed */}

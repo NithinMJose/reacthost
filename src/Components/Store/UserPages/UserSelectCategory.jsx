@@ -46,7 +46,7 @@ const UserSelectCategory = () => {
             <Link to={`/UserProducts/${category.uniqueName}`}>
               <div className="category-image">
                 <img
-                  src={`${BASE_URL}/images/${category.imagePath}`}
+                  src={category.imagePath}
                   alt={`${category.pCategoryName}'s Image`}
                   className="category-image"
                 />

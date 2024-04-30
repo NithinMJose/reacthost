@@ -190,19 +190,20 @@ const ProductDetails = () => {
           <div className="product-details">
             <div className="product-images-container">
               <div className="product-images">
-                <img src={`${BASE_URL}/images/${product[`imagePath${currentImageIndex + 1}`]}`} alt={product.productName} className="main-image" />
+                <img src={product[`imagePath${currentImageIndex + 1}`]} alt={product.productName} className="main-image" />
               </div>
               <div className="thumbnail-images">
                 {Array.from({ length: imageCount }, (_, i) => i + 1).map(index => (
                   <img
                     key={index}
-                    src={`${BASE_URL}/images/${product[`imagePath${index}`]}`}
+                    src={product[`imagePath${index}`]} // Correct interpolation using []
                     alt={product.productName}
                     className={`thumbnail ${index - 1 === currentImageIndex ? 'active' : ''}`}
                     onClick={() => setCurrentImageIndex(index - 1)}
                   />
                 ))}
               </div>
+
             </div>
             <div className="product-info-container">
               <div className="product-info">

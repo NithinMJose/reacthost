@@ -59,7 +59,7 @@ const TicketCategoryList = () => {
     }
 
     return (
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{ marginTop: "100px" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -90,10 +90,10 @@ const TicketCategoryList = () => {
                 <TableCell>
                   {ticketCategory.imagePath ? (
                     <img
-                      src={`${BASE_URL}/images/${ticketCategory.imagePath}`}
+                      src={ticketCategory.imagePath}
                       alt={`Image for ${ticketCategory.categoryName}`}
                       className="category-image"
-                      style={{ maxWidth: '100%', maxHeight: '100%', width: '150px', height: '150px' }}
+                      style={{ maxWidth: '200px', maxHeight: '200px', width: '150px', height: '150px' }}
                       onLoad={() => console.log(`Image loaded for ${ticketCategory.categoryName}: ${ticketCategory.imagePath}`)}
                       onError={() => console.error(`Error loading image for ${ticketCategory.categoryName}: ${ticketCategory.imagePath}`)}
                     />

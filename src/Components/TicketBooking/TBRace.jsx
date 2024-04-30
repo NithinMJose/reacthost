@@ -75,7 +75,7 @@ const TBRace = () => {
           <Grid item key={race.raceId} xs={12} sm={6} md={3} lg={3} sx={{ margin: '8px' }}>
             <Card onClick={() => handleRaceClick(race.uniqueRaceName)} sx={{ cursor: 'pointer', height: '100%', width: '90%' }}>
               <img
-                src={`${BASE_URL}/images/${race.imagePath}`}
+                src={race.imagePath}
                 alt={`Race ${race.raceName} Image`}
                 style={{ width: '100%', height: '150px', objectFit: 'cover' }}
               />

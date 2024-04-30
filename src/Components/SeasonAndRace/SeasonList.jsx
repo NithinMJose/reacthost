@@ -83,7 +83,7 @@ const SeasonList = () => {
                 <TableCell>
                   {season.imagePath ? (
                     <img
-                      src={`${BASE_URL}/images/${season.imagePath}`}
+                      src={season.imagePath}
                       alt={`Image for ${season.year}`}
                       className="season-image"
                       style={{ maxWidth: '100%', maxHeight: '100%', width: '150px', height: '150px' }}

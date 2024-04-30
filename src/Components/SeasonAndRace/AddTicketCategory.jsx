@@ -1,4 +1,3 @@
-// AddTicketCategory.jsx
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -101,10 +100,8 @@ const AddTicketCategory = () => {
     <div>
       <AdminNavbar />
       <br />
-      <Container maxWidth="sm" className="outerSetup">
+      <Container maxWidth="sm" className="outerSetup" style={{ marginTop: '80px' }}>
         <br />
-        
-
         <div className="add-corner-container">
           <div className="add-corner-panel">
             <Typography variant="h5" className="add-corner-header">
@@ -188,7 +185,6 @@ const AddTicketCategory = () => {
             </div>
           </div>
         </div>
-
         <br />
         <br />
       </Container>

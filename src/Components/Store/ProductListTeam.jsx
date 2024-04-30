@@ -28,6 +28,7 @@ const ProductListTeam = () => {
     try {
       const tokenPayload = jwt_decode(token);
       const teamId = tokenPayload.teamId;
+      console.log('Team ID:', teamId);
   
       axios
         .get(`${BASE_URL}/api/Product/GetProductsByTeamId/${teamId}`, {

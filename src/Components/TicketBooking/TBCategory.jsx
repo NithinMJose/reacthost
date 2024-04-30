@@ -62,7 +62,7 @@ const TBCategory = () => {
       <div className="driver-list-container">
         {ticketCategories.map(category => (
           <div key={category.ticketCategoryId} className="driver-item" onClick={() => handleCategoryClick(category.ticketCategoryId, category.ticketPrice)}>
-            <img src={`${BASE_URL}/images/${category.imagePath}`} alt={`Category ${category.categoryName} Image`} className="driver-image" />
+            <img src={category.imagePath} alt={`Category ${category.categoryName} Image`} className="driver-image" />
             {/* Display ticket category details as needed */}
             <h2>{`Category - ${category.categoryName}`}</h2>
             <p>{`Description: ${category.description || 'N/A'}`}</p>

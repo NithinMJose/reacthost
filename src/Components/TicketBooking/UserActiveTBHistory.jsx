@@ -21,6 +21,8 @@ import UserNavbar from '../LoginSignup/UserNavbar';
 import Footer from '../LoginSignup/Footer';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../config';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const UserActiveTBHistory = () => {
   const [activeTicketBookingHistory, setActiveTicketBookingHistory] = useState([]);
@@ -97,8 +99,28 @@ const UserActiveTBHistory = () => {
   };
 
   const handlePrintTicket = (booking) => {
-    alert(`Printing the ticket for Booking ID: ${booking.ticketBookingId}`);
+    // Create a new jsPDF instance
+    const doc = new jsPDF();
+
+    // Set initial y position for text
+    let yPos = 10;
+
+    // Add ticket details to the PDF
+    Object.entries(booking).forEach(([key, value]) => {
+      // Skip certain keys or format values as needed
+      if (key === 'ticketBookingId') {
+      } else if (key === 'raceDate' || key === 'paymentDate') {
+        doc.text(`${key}: ${value ? new Date(value).toLocaleString() : '-'}`, 10, yPos += 10);
+      } else {
+        doc.text(`${key}: ${value}`, 10, yPos += 10);
+      }
+    });
+
+    // Save the PDF
+    doc.save(`Ticket_Details_${booking.ticketBookingId}.pdf`);
   };
+
+
 
   const handleManageBooking = async (booking) => {
     if (booking.bookingStatus === 'Confirmed') {
@@ -132,6 +154,10 @@ const UserActiveTBHistory = () => {
   return (
     <div>
       <UserNavbar />
+      <br />
+      <br />
+      <br />
+      <br />
       <Container sx={{ marginTop: 4 }}>
         <Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
           <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
@@ -179,10 +205,6 @@ const UserActiveTBHistory = () => {
         </Paper>
       </Container>
       <Footer />
-
-
-      
-
       <Dialog open={detailsDialogOpen} onClose={handleCloseDetailsDialog} maxWidth="md" fullWidth>
         <DialogTitle sx={{ textAlign: 'center' }}>Booking Details</DialogTitle>
         <DialogContent>
@@ -274,9 +296,6 @@ const UserActiveTBHistory = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-
-
     </div>
   );
 };

@@ -76,7 +76,7 @@ const RaceListAdmin = () => {
                 <TableCell>
                   {race.imagePath && (
                     <img
-                      src={`${BASE_URL}/images/${race.imagePath}`}
+                      src={race.imagePath}
                       alt={`Race ${race.raceName}`}
                       style={{ maxWidth: '100%', maxHeight: '100px' }}
                     />

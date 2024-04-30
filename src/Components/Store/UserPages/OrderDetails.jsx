@@ -141,7 +141,7 @@ const OrderDetails = () => {
                   <div className='firstColumn'>
                     <img
                       className="productImage"
-                      src={`${BASE_URL}/images/${item.productImagePath}`}
+                      src={item.productImagePath}
                       alt={item.productName}
                       onClick={() => navigate(`/ProductDetails/${item.uniqueName}`)}
                     />

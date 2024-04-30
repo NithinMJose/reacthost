@@ -53,13 +53,6 @@ const AuthenticatedUserHome = () => {
         <Box mt={2}>
         </Box>
       </div>
-      {/* 
-      <br />
-      <br />
-      <h1>Detected Face Name : {detectedFaceName}</h1> 
-      <br />
-      <br />
-      */}
       <HomeCarousel className="HomeCarousel" />
       <About className="About" />
       <Footer className="Footer" />

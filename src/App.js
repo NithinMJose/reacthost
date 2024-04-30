@@ -129,8 +129,8 @@ function App() {
           <Route path="/AdminHome" element={<AuthenticatedAdminHome />} />
           <Route path="/TeamHome" element={<TeamHome />} />
           <Route path="/UserHome" element={<AuthenticatedUserHome />} />
-          <Route path="/UserViewProfile" element={<UserViewProfile />} /> {/* Define the route for UserViewProfile */}
-          <Route path="/UserList" element={<UserList />} /> {/* Define the route for UserList */}
+          <Route path="/UserViewProfile" element={<UserViewProfile />} />
+          <Route path="/UserList" element={<UserList />} /> 
           <Route path="/Errors" element={<Errors />} />
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/AboutPage" element={<AboutPage />} />

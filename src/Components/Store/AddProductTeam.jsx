@@ -17,7 +17,6 @@ const AddProductTeam = () => {
   const [teamId, setTeamId] = useState('');
   const [productCategoryId, setProductCategoryId] = useState('');
   const [stockQuantity, setStockQuantity] = useState('');
-  //const [discountAmount, setDiscountAmount] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState([]);
@@ -27,7 +26,6 @@ const AddProductTeam = () => {
   const [priceError, setPriceError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [stockQuantityError, setStockQuantityError] = useState('');
-  //const [discountAmountError, setDiscountAmountError] = useState('');
   const [imageFileErrors, setImageFileErrors] = useState([]);
 
   const [imageFile1, setImageFile1] = useState(null);
@@ -164,18 +162,6 @@ const AddProductTeam = () => {
     }
   };
 
-  // const validateDiscountAmount = (value) => {
-  //   const parsedDiscount = parseInt(value);
-  //   if (isNaN(parsedDiscount) || parsedDiscount < 0) {
-  //     setStockQuantityError('Discount amount must be a non-negative integer');
-  //     return false;
-  //   } else {
-  //     setStockQuantityError('');
-  //     return true;
-  //   }
-  // };
-
-
   const validateForm = () => {
     let isValid = true;
 
@@ -224,16 +210,11 @@ const AddProductTeam = () => {
         formData.append('TeamId', parsedTeamId);
         formData.append('ProductCategoryId', productCategoryId);
         formData.append('StockQuantity', stockQuantity);
-        //formData.append('DiscountAmount', discountAmount);
         formData.append('imageFile1', imageFile1);
         formData.append('imageFile2', imageFile2);
         formData.append('imageFile3', imageFile3);
         formData.append('imageFile4', imageFile4);
-  
-        for (var pair of formData.entries()) {
-          console.log(pair[0] + ', ' + pair[1]);
-        }
-  
+
         const createProductResponse = await fetch(`${BASE_URL}/api/Product/CreateProduct`, {
           method: 'POST',
           body: formData,

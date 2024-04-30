@@ -154,7 +154,7 @@ const UserWishList = () => {
                 <Paper elevation={3} className="wishlist-item">
                   <div className="wishlist-item-content">
                   <a href={`/ProductDetails/${productDetails[item.productId]?.uniqueName}`} className="product-link">
-                      <img src={`${BASE_URL}/images/${productDetails[item.productId]?.imagePath1}`} alt={productDetails[item.productId]?.productName} className="product-image" />
+                      <img src={productDetails[item.productId]?.imagePath1} alt={productDetails[item.productId]?.productName} className="product-image" />
 </a>
   
                   <Typography variant="subtitle1" className="product-name">{productDetails[item.productId]?.productName}</Typography>

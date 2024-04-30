@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Typography, Container } from '@mui/material';
+import { Button, TextField, Typography, Container, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import AdminNavbar from '../LoginSignup/AdminNavbar';
 import Footer from '../LoginSignup/Footer';
 import { BASE_URL } from '../../config';
@@ -10,7 +10,10 @@ import { BASE_URL } from '../../config';
 const AddCorner = () => {
   const [cornerNumber, setCornerNumber] = useState('');
   const [cornerCapacity, setCornerCapacity] = useState('');
-  const [raceId, setRaceId] = useState('');
+  const [seasonYears, setSeasonYears] = useState([]);
+  const [selectedSeasonYear, setSelectedSeasonYear] = useState('');
+  const [raceNames, setRaceNames] = useState([]);
+  const [selectedRaceName, setSelectedRaceName] = useState(''); // Add state for selected race name
   const [loading, setLoading] = useState(false);
 
   const [cornerNumberError, setCornerNumberError] = useState('');
@@ -18,6 +21,66 @@ const AddCorner = () => {
   const [raceIdError, setRaceIdError] = useState('');
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchSeasons();
+  }, []);
+
+  useEffect(() => {
+    console.log('New Year is selected:', selectedSeasonYear);
+    if (selectedSeasonYear) {
+      fetchRacesBySeasonYear(selectedSeasonYear);
+    }
+  }, [selectedSeasonYear]);
+
+  const fetchSeasons = async () => {
+    console.log('fetching seasons');
+    try {
+      const response = await fetch(`${BASE_URL}/api/Season/GetSeasons`);
+      if (response.ok) {
+        const data = await response.json();
+        const years = data.map(season => season.year);
+        console.log('season years:', years);
+        setSeasonYears(years);
+        if (years.length > 0) {
+          setSelectedSeasonYear(years[0]);
+        }
+      } else {
+        throw new Error('Failed to fetch seasons');
+      }
+    } catch (error) {
+      console.error('Error fetching seasons:', error);
+    }
+  };
+
+  const fetchRacesBySeasonYear = async (year) => {
+    console.log('fetching races by season year:', year);
+    try {
+      const response = await fetch(`${BASE_URL}/api/Race/GetRacesBySeasonYear?year=${year}`);
+      if (response.ok) {
+        if (response.headers.get('content-type').includes('application/json')) {
+          const data = await response.json();
+          if (data.length > 0) {
+            const names = data.map(race => race.raceName);
+            console.log("Available Race names are:", names);
+            setRaceNames(names);
+          } else {
+            console.log("No races found for the selected year.");
+            setRaceNames([]); // Clear raceNames state if no races found
+          }
+        } else {
+          console.log("No races found for the selected year.");
+          setRaceNames([]); // Clear raceNames state if no races found
+        }
+      } else {
+        throw new Error('Failed to fetch races by season year');
+      }
+    } catch (error) {
+      console.error('Error fetching races by season year:', error);
+    }
+  };
+
+
 
   const validateCornerNumber = (value) => {
     if (!/^\d+$/.test(value)) {
@@ -69,7 +132,8 @@ const AddCorner = () => {
         const requestBody = {
           cornerNumber: parseInt(cornerNumber),
           cornerCapacity: parseInt(cornerCapacity),
-          raceId: parseInt(raceId),
+          seasonYear: selectedSeasonYear, // Use selectedSeasonYear instead of raceId
+          raceName: selectedRaceName, // Use selectedRaceName instead of raceId
         };
 
         const createCornerResponse = await fetch(`${BASE_URL}/api/Corner/InsertCorner`, {
@@ -83,7 +147,6 @@ const AddCorner = () => {
         if (createCornerResponse.status === 201) {
           toast.success('Corner added successfully');
           navigate('/CornerListAdmin'); // Adjust the route as needed
-          // Additional logic or navigation can be added here
         } else {
           const errorData = await createCornerResponse.json();
           console.error('Corner creation failed:', errorData);
@@ -100,27 +163,28 @@ const AddCorner = () => {
     }
   };
 
+
   const validateForm = () => {
     let isValid = true;
 
     isValid = isValid && validateCornerNumber(cornerNumber);
     isValid = isValid && validateCornerCapacity(cornerCapacity);
-    isValid = isValid && validateRaceId(raceId);
 
     return isValid;
   };
+
 
   return (
     <div>
       <AdminNavbar />
       <br />
-      <br />  
+      <br />
+      <br />
+      <br />
+      <br />
       <br />
       <br />
       <Container maxWidth="sm" className="outerSetup">
-        <br />
-        <br />
-
         <div className="add-corner-container">
           <div className="add-corner-panel">
             <Typography variant="h5" className="add-corner-header">
@@ -157,40 +221,52 @@ const AddCorner = () => {
                 helperText={cornerCapacityError}
                 style={{ marginBottom: '10px' }}
               />
-              <TextField
-                label="Race ID"
-                variant="outlined"
-                fullWidth
-                type="number"
-                value={raceId}
-                onChange={(e) => {
-                  setRaceId(e.target.value);
-                  validateRaceId(e.target.value);
-                }}
-                onBlur={() => validateRaceId(raceId)}
-                error={Boolean(raceIdError)}
-                helperText={raceIdError}
-                style={{ marginBottom: '10px' }}
-              />
+              <FormControl fullWidth variant="outlined" style={{ marginBottom: '10px' }}>
+                <InputLabel id="season-year-label">Select Season Year</InputLabel>
+                <Select
+                  labelId="season-year-label"
+                  id="season-year-select"
+                  value={selectedSeasonYear}
+                  onChange={(e) => setSelectedSeasonYear(e.target.value)}
+                  label="Select Season Year"
+                >
+                  {seasonYears.map(year => (
+                    <MenuItem key={year} value={year}>{year}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth variant="outlined" style={{ marginBottom: '10px' }}>
+                <InputLabel id="race-name-label">Select Race Name</InputLabel>
+                <Select
+                  labelId="race-name-label"
+                  id="race-name-select"
+                  value={selectedRaceName} // Use selectedRaceName instead of raceId
+                  onChange={(e) => setSelectedRaceName(e.target.value)} // Use setSelectedRaceName instead of setRaceId
+                  label="Select Race Name"
+                >
+                  {raceNames.map((name, index) => (
+                    <MenuItem key={index} value={name}>{name}</MenuItem> // Pass name as value instead of index + 1
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div className="add-corner-submit-container">
-              <Button
-                variant="contained"
-                color="primary"
-                className="add-corner-submit"
-                onClick={handleSave}
-                disabled={loading}
-              >
-                {loading ? 'Adding...' : 'Add Corner'}
-              </Button>
+              {!raceNames.includes("Hello There") && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="add-corner-submit"
+                  onClick={handleSave}
+                  disabled={loading}
+                >
+                  {loading ? 'Adding...' : 'Add Corner'}
+                </Button>
+              )}
             </div>
+
           </div>
         </div>
-
-        <br />
-        <br />
       </Container>
-      <br />
       <Footer />
     </div>
   );

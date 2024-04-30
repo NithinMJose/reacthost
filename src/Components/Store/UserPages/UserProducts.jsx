@@ -225,7 +225,7 @@ const UserProducts = () => {
                     <span className="product-heart2">&#x2661;</span>
                   )}
                 </div>
-                <img src={`${BASE_URL}/images/${product.imagePath1}`} alt={product.productName} className="product-imagess" />
+                <img src={product.imagePath1} alt={product.productName} className="product-imagess" />
               <p className="product-names">{product.productName}</p>
             </a>
             <p className="team-name">Team: {teams[product.teamId]}</p>

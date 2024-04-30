@@ -1,0 +1,19 @@
+.ImageContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* Optional: Adjustments for individual image containers */
+.ImageContainer>div {
+  flex: 1;
+  margin-right: 10px;
+  /* Adjust as needed for spacing between images */
+}
+
+/* Optional: Adjustments for images */
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
