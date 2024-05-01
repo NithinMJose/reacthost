@@ -73,34 +73,59 @@ const EditPoll = () => {
 
   const handleUpdate = async () => {
     // Validation for updatedQuestion
-    if (updatedQuestion.trim().length < 4) {
-      setQuestionError('Question should be at least 4 characters long');
+    if (updatedQuestion.trim().length < 5) {
+      setQuestionError('Question should be at least 5 characters long');
       return;
-    } else {
+    }
+    // setQuestionError('Question should be at most 100 characters long');
+    else if (updatedQuestion.trim().length > 100) {
+      setQuestionError('Question should be at most 100 characters long');
+      return;
+    }
+
+    else {
       setQuestionError('');
     }
 
     // Validation for updatedOption1
-    if (updatedOption1.trim().length < 4) {
-      setOption1Error('Option 1 should be at least 4 characters long');
+    if (updatedOption1.trim().length < 3) {
+      setOption1Error('Option 1 should be at least 3 characters long');
       return;
-    } else {
+    }
+    // maximum 15 characters
+    else if (updatedOption1.trim().length > 15) {
+      setOption1Error('Option 1 should be at most 15 characters long');
+      return;
+    }
+    else {
       setOption1Error('');
     }
 
     // Validation for updatedOption2
-    if (updatedOption2.trim().length < 4) {
-      setOption2Error('Option 2 should be at least 4 characters long');
+    if (updatedOption2.trim().length < 3) {
+      setOption2Error('Option 2 should be at least 3 characters long');
       return;
-    } else {
+    }
+    // maximum 15 characters
+    else if (updatedOption2.trim().length > 15) {
+      setOption2Error('Option 2 should be at most 15 characters long');
+      return;
+    }
+    else {
       setOption2Error('');
     }
 
     // Validation for updatedOption3
-    if (updatedOption3.trim().length < 4) {
-      setOption3Error('Option 3 should be at least 4 characters long');
+    if (updatedOption3.trim().length < 3) {
+      setOption3Error('Option 3 should be at least 3 characters long');
       return;
-    } else {
+    }
+    // maximum 15 characters
+    else if (updatedOption3.trim().length > 15) {
+      setOption3Error('Option 3 should be at most 15 characters long');
+      return;
+    }
+    else {
       setOption3Error('');
     }
 
@@ -144,6 +169,9 @@ const EditPoll = () => {
     <>
       <AdminNavbar />
       <br />
+      <br />
+      <br />
+      <br />
 
       <Container maxWidth="md" style={{ marginTop: '20px' }}>
         <Paper elevation={3} style={{ padding: '20px' }}>
@@ -159,8 +187,8 @@ const EditPoll = () => {
                 onChange={(e) => {
                   setUpdatedQuestion(e.target.value);
                   // Validation for updatedQuestion
-                  if (e.target.value.trim().length < 4) {
-                    setQuestionError('Question should be at least 4 characters long');
+                  if (e.target.value.trim().length < 5) {
+                    setQuestionError('Question should be at least 5 characters long');
                   } else {
                     setQuestionError('');
                   }
@@ -177,8 +205,8 @@ const EditPoll = () => {
                 onChange={(e) => {
                   setUpdatedOption1(e.target.value);
                   // Validation for updatedOption1
-                  if (e.target.value.trim().length < 4) {
-                    setOption1Error('Option 1 should be at least 4 characters long');
+                  if (e.target.value.trim().length < 3) {
+                    setOption1Error('Option 1 should be at least 3 characters long');
                   } else {
                     setOption1Error('');
                   }
@@ -195,8 +223,8 @@ const EditPoll = () => {
                 onChange={(e) => {
                   setUpdatedOption2(e.target.value);
                   // Validation for updatedOption2
-                  if (e.target.value.trim().length < 4) {
-                    setOption2Error('Option 2 should be at least 4 characters long');
+                  if (e.target.value.trim().length < 3) {
+                    setOption2Error('Option 2 should be at least 3 characters long');
                   } else {
                     setOption2Error('');
                   }
@@ -213,8 +241,8 @@ const EditPoll = () => {
                 onChange={(e) => {
                   setUpdatedOption3(e.target.value);
                   // Validation for updatedOption3
-                  if (e.target.value.trim().length < 4) {
-                    setOption3Error('Option 3 should be at least 4 characters long');
+                  if (e.target.value.trim().length < 3) {
+                    setOption3Error('Option 3 should be at least 3 characters long');
                   } else {
                     setOption3Error('');
                   }

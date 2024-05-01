@@ -1,5 +1,3 @@
-/* TopicListUser.css */
-
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -9,15 +7,20 @@ body {
 
 .topic-list-container {
   margin: 20px;
+  display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .topic-container {
-  background-color: #ffffff;
+  background-color: rgba(237, 168, 168, 0.9);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
-  margin-bottom: 30px; /* Add more margin for space at the bottom of each container */
+  margin-bottom: 30px;
+    width: calc(50% - 10px);
+    box-sizing: border-box;
 }
 
 .topic-container:hover {
@@ -27,17 +30,17 @@ body {
 .topic-title {
   font-size: 1.5rem;
   margin-bottom: 12px;
-  color: #333;
+  color: #000000;
 }
 
 .topic-content {
   font-size: 1.2rem;
-  color: #555;
+  color: #000000;
+    margin-bottom: 16px;
 }
 
 .topic-details {
   font-size: 1rem;
-  color: #777;
+  color: #000000;
 }
 
-/* You can customize the styling further based on your preferences */

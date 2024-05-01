@@ -147,6 +147,9 @@ const AddCorner = () => {
         if (createCornerResponse.status === 201) {
           toast.success('Corner added successfully');
           navigate('/CornerListAdmin'); // Adjust the route as needed
+        } else if (createCornerResponse.status === 409) {
+          toast.error('Corner Number is already entered for the given race');
+          console.log('Corner creation failed: Corner Number is already entered for');
         } else {
           const errorData = await createCornerResponse.json();
           console.error('Corner creation failed:', errorData);

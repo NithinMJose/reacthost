@@ -49,6 +49,7 @@ const DriverListTeam = () => {
           // Filter out the drivers where teamIdRef matches the teamId from JWT token
           const filteredDrivers = response.data.filter(driver => driver.teamIdRef === parsedTeamId);
           setDriverData(filteredDrivers);
+          console.log('Driver data:', filteredDrivers); // Print driver data
           console.log('Driver data:', filteredDrivers.map(driver => driver.teamIdRef)); // Print teamIdRef values
         })
         .catch((error) => {
@@ -87,7 +88,8 @@ const DriverListTeam = () => {
               <TableCell style={{ width: '5%' }}>Sl No.</TableCell>
               <TableCell style={{ width: '15%' }}>Driver Name</TableCell>
               <TableCell style={{ width: '10%' }}>Date of Birth</TableCell>
-              <TableCell style={{ width: '50%' }}>Description</TableCell>
+              <TableCell style={{ width: '40%' }}>Description</TableCell>
+              <TableCell style={{ width: '10%' }}>Status</TableCell>
               <TableCell style={{ width: '20%' }}>Image</TableCell>
               <TableCell style={{ width: '10%' }}>Manage</TableCell>
             </TableRow>
@@ -105,6 +107,7 @@ const DriverListTeam = () => {
                   })}
                 </TableCell>
                 <TableCell>{driver.description}</TableCell>
+                <TableCell>{driver.status}</TableCell>
                 <TableCell>
                   {driver.imagePath ? (
                     <img

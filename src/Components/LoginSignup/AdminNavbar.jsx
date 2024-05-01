@@ -93,6 +93,7 @@ function AdminNavbar() {
               </div>
             </li>
 
+            {/*
             <li className="nav-item dropdown">
               <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Open Forum</span>
               <div className="dropdown-menu m-0">
@@ -101,6 +102,7 @@ function AdminNavbar() {
                 <Link to="/TopicListAdminEditView" className="dropdown-item">Check Comments</Link>
               </div>
             </li>
+            */}
 
             <li><Link to="/UserList" className="nav-link">Users</Link></li>
             <li className="nav-item dropdown">

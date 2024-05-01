@@ -45,7 +45,7 @@ function DeliveryCompanyNavbar() {
                 <Link to="/ListShippingOrders" className="dropdown-item">Shipping Orders</Link>
               </div>
             </li>
-
+            {/*
             <li className="nav-item dropdown">
               <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">History</span>
               <div className="dropdown-menu m-0">
@@ -53,6 +53,7 @@ function DeliveryCompanyNavbar() {
                 <Link to="/F1HistoryList" className="dropdown-item">List F1 History</Link>
               </div>
             </li>
+          */}
 
             <li className="nav-item dropdown">
               <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">{CompanyName}</span>

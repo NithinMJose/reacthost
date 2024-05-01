@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AdminNavbar from '../LoginSignup/AdminNavbar';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './UpdateDriver.css';
+import Footer from '../LoginSignup/Footer';
 import {
   Button,
   TextField,
@@ -10,82 +13,60 @@ import {
   Container,
   Grid,
   Paper,
-  MenuItem,
-  Select,
+  MenuItem, // Import MenuItem for dropdown options
   FormControl,
-  InputLabel,
+  Select
 } from '@mui/material';
-import TeamSidebar from '../sidebar/TeamSidebar';
+import { useLocation } from 'react-router-dom';
+import TeamSidebar from '../sidebar/TeamSidebar'; // Import TeamSidebar
 import TeamNavbar from '../LoginSignup/Team/TeamNavbar';
-import Footer from '../LoginSignup/Footer';
 import { BASE_URL } from '../../config';
 
-const UpdateProductTeam = () => {
+const UpdateDriverTeam = () => {
   const location = useLocation();
+  const { state } = location;
   const navigate = useNavigate();
-  const productId = location.state.productId;
+  const driverId = state.driverId;
 
-  const [productData, setProductData] = useState({
-    productName: '',
+  const [driverData, setDriverData] = useState({
+    name: '',
+    dob: '',
     description: '',
-    price: 0,
-    stockQuantity: 0,
-    productCategoryId: 0,
-    imagePath1: '',
-    imageFile1: null,
-    imagePath2: '',
-    imageFile2: null,
-    imagePath3: '',
-    imageFile3: null,
-    imagePath4: '',
-    imageFile4: null,
-    isActive: false,
-    newImageSelected1: false,
-    newImageUrl1: '',
-    newImageSelected2: false,
-    newImageUrl2: '',
-    newImageSelected3: false,
-    newImageUrl3: '',
-    newImageSelected4: false,
-    newImageUrl4: '',
+    imagePath: '',
+    imageFile: null,
+    status: 'active' // Default status value
   });
 
-  const [categories, setCategories] = useState([]);
-  const [errors, setErrors] = useState({
-    productName: '',
-    description: '',
-    price: '',
-    stockQuantity: '',
-  });
+  const [nameError, setNameError] = useState('');
+  const [dobError, setDobError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+  const [statusError, setStatusError] = useState('');
 
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/api/ProductCategory/GetAllProductCategories`)
+      .get(`${BASE_URL}/api/Driver/GetDriverById?id=${driverId}`)
       .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching product categories:', error);
-      });
-  }, []);
+        console.log('Driver data:', response.data);
+        const formattedDate = response.data.dob
+          ? new Date(response.data.dob).toISOString().split('T')[0]
+          : '';
 
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/Product/GetProductById?id=${productId}`)
-      .then((response) => {
-        setProductData(response.data);
+        setDriverData({
+          ...response.data,
+          dob: formattedDate,
+        });
       })
       .catch((error) => {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching driver data:', error);
       });
-  }, [productId]);
+  }, [driverId]);
 
   const handleFieldChange = (field, value) => {
-    setProductData((prevData) => ({ ...prevData, [field]: value }));
-    setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
+    setDriverData((prevData) => ({ ...prevData, [field]: value }));
+    validateField(field, value);
   };
 
-  const handleImageUpload = (event, imageNumber) => {
+  const handleImageUpload = (event) => {
     const file = event.target.files[0];
 
     if (!file || (file.type !== 'image/jpeg' && file.type !== 'image/png')) {
@@ -93,111 +74,124 @@ const UpdateProductTeam = () => {
       return;
     }
 
-    const imageUrl = URL.createObjectURL(file);
+    setDriverData((prevData) => ({
+      ...prevData,
+      imageFile: file,
+      imagePath: URL.createObjectURL(file),
+    }));
+  };
 
-    switch (imageNumber) {
-      case 1:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile1: file,
-          newImageSelected1: true,
-          newImageUrl1: imageUrl,
-        }));
+  const handleUpdateClick = () => {
+    if (!validateForm()) {
+      toast.error('Check all input fields and apply again');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', driverId);
+    formData.append('name', driverData.name);
+    formData.append('dob', driverData.dob);
+    formData.append('description', driverData.description);
+    formData.append('status', driverData.status);
+
+    if (driverData.imageFile) {
+      formData.append('imageFile', driverData.imageFile);
+    }
+
+    // Log the formData object just before sending
+    for (let pair of formData.entries()) {
+      console.log('hello :', pair[0] + ': ' + pair[1]);
+    }
+
+    axios
+      .put(`${BASE_URL}/api/Driver/UpdateDriver`, formData)
+      .then((response) => {
+        console.log('Update successful:', response);
+        toast.success('Update successful');
+        navigate('/DriverListTeam');
+      })
+      .catch((error) => {
+        console.error('Error updating driver data:', error);
+        console.log('Form Data:', formData);
+        toast.error('Error updating driver data');
+      });
+  };
+
+  const validateField = (field, value) => {
+    switch (field) {
+      case 'name':
+        validateName(value);
         break;
-      case 2:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile2: file,
-          newImageSelected2: true,
-          newImageUrl2: imageUrl,
-        }));
+      case 'dob':
+        validateDate(value);
         break;
-      case 3:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile3: file,
-          newImageSelected3: true,
-          newImageUrl3: imageUrl,
-        }));
+      case 'description':
+        validateDescription(value);
         break;
-      case 4:
-        setProductData((prevData) => ({
-          ...prevData,
-          imageFile4: file,
-          newImageSelected4: true,
-          newImageUrl4: imageUrl,
-        }));
+      case 'status':
+        validateStatus(value);
         break;
       default:
         break;
     }
   };
 
-  const handleUpdateClick = () => {
-    let formIsValid = true;
-    const newErrors = {};
+  const validateDate = (value) => {
+    const currentDate = new Date();
+    const selectedDate = new Date(value);
 
-    if (!productData.productName.trim()) {
-      newErrors.productName = 'Product name is required';
-      formIsValid = false;
+    if (selectedDate > currentDate) {
+      setDobError('Date of Birth cannot be in the future');
+      return false;
+    } else {
+      setDobError('');
+      return true;
     }
+  };
 
-    if (!productData.description.trim()) {
-      newErrors.description = 'Description is required';
-      formIsValid = false;
+  const validateName = (value) => {
+    if (value.trim().length < 3) {
+      setNameError('Driver name should be at least 3 characters long');
+      return false;
+    } else {
+      setNameError('');
+      return true;
     }
+  };
 
-    if (productData.price <= 0) {
-      newErrors.price = 'Price must be greater than 0';
-      formIsValid = false;
+  const validateDescription = (value) => {
+    if (value.trim().length < 10) {
+      setDescriptionError('Description should be at least 10 characters long');
+      return false;
+    } else {
+      setDescriptionError('');
+      return true;
     }
+  };
 
-    if (productData.stockQuantity < 0) {
-      newErrors.stockQuantity = 'Stock quantity cannot be negative';
-      formIsValid = false;
+  const validateStatus = (value) => {
+    if (value.trim().length < 3) {
+      setStatusError('Status should be at least 3 characters long');
+      return false;
+    } else {
+      setStatusError('');
+      return true;
     }
+  };
 
-    if (!formIsValid) {
-      setErrors(newErrors);
-      return;
-    }
+  const validateForm = () => {
+    let isValid = true;
 
-    const formData = new FormData();
-    formData.append('productId', productId);
-    formData.append('productName', productData.productName);
-    formData.append('description', productData.description);
-    formData.append('price', productData.price);
-    formData.append('stockQuantity', productData.stockQuantity);
-    formData.append('productCategoryId', productData.productCategoryId);
-    formData.append('isActive', productData.isActive);
+    isValid = isValid && validateName(driverData.name);
+    isValid = isValid && validateDate(driverData.dob);
+    isValid = isValid && validateDescription(driverData.description);
+    isValid = isValid && validateStatus(driverData.status);
 
-    if (productData.imageFile1) {
-      formData.append('imageFile1', productData.imageFile1);
-    }
-    if (productData.imageFile2) {
-      formData.append('imageFile2', productData.imageFile2);
-    }
-    if (productData.imageFile3) {
-      formData.append('imageFile3', productData.imageFile3);
-    }
-    if (productData.imageFile4) {
-      formData.append('imageFile4', productData.imageFile4);
-    }
-
-    axios
-      .put(`${BASE_URL}/api/Product/UpdateProduct/${productId}`, formData)
-      .then((response) => {
-        toast.success('Update successful');
-        navigate('/ProductListTeam');
-      })
-      .catch((error) => {
-        console.error('Error updating product data:', error);
-        toast.error('Error updating product data');
-      });
+    return isValid;
   };
 
   return (
-    <div className="productlistpage">
+    <div className="driverlistpage">
       <TeamNavbar />
       <br />
       <br />
@@ -205,121 +199,76 @@ const UpdateProductTeam = () => {
       <br />
       <div className="container-fluid">
         <div className="row">
-          <TeamSidebar />
+          <TeamSidebar /> {/* Display the TeamSidebar component as a sidebar */}
           <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div>
+            <div> {/* Wrapping the content in a div */}
               <Paper elevation={3} style={{ padding: '20px' }}>
                 <Typography variant="h4" gutterBottom>
-                  Product Details
+                  Driver Details
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextField
-                      label="Product Name"
+                      label="Driver Name"
                       fullWidth
-                      value={productData.productName}
-                      onChange={(e) => handleFieldChange('productName', e.target.value)}
-                      error={!!errors.productName}
-                      helperText={errors.productName}
+                      value={driverData.name}
+                      onChange={(e) => handleFieldChange('name', e.target.value)}
+                      error={Boolean(nameError)}
+                      helperText={nameError}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Date of Birth"
+                      type="date"
+                      fullWidth
+                      value={driverData.dob}
+                      onChange={(e) => handleFieldChange('dob', e.target.value)}
+                      error={Boolean(dobError)}
+                      helperText={dobError}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
                       label="Description"
                       fullWidth
-                      value={productData.description}
+                      value={driverData.description}
                       onChange={(e) => handleFieldChange('description', e.target.value)}
-                      error={!!errors.description}
-                      helperText={errors.description}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Price"
-                      type="number"
-                      fullWidth
-                      value={productData.price}
-                      onChange={(e) => handleFieldChange('price', e.target.value)}
-                      error={!!errors.price}
-                      helperText={errors.price}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Stock Quantity"
-                      type="number"
-                      fullWidth
-                      value={productData.stockQuantity}
-                      onChange={(e) => handleFieldChange('stockQuantity', e.target.value)}
-                      error={!!errors.stockQuantity}
-                      helperText={errors.stockQuantity}
+                      error={Boolean(descriptionError)}
+                      helperText={descriptionError}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel>Product Category</InputLabel>
                       <Select
-                        value={productData.productCategoryId}
-                        onChange={(e) => handleFieldChange('productCategoryId', e.target.value)}
+                        label="Status"
+                        value={driverData.status}
+                        onChange={(e) => handleFieldChange('status', e.target.value)}
+                        error={Boolean(statusError)}
+                        displayEmpty
                       >
-                        {categories.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                          </MenuItem>
-                        ))}
+                        <MenuItem value="active">Active</MenuItem>
+                        <MenuItem value="inactive">Inactive</MenuItem>
                       </Select>
-                    </FormControl>
-                  </Grid>
-                  {[1, 2, 3, 4].map((number) => (
-                    <Grid item xs={12} key={number}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, number)}
-                      />
-                      {productData[`newImageSelected${number}`] && (
-                        <Typography variant="subtitle1">New Image selected, replacing the existing</Typography>
-                      )}
-                      {productData[`newImageUrl${number}`] && (
-                        <img
-                          src={productData[`newImageUrl${number}`]}
-                          alt={`Product Image ${number}`}
-                          className="product-image"
-                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                        />
-                      )}
-                      {productData[`imagePath${number}`] && (
-                        <img
-                          src={productData[`imagePath${number}`]}
-                          alt={`Product Image ${number}`}
-                          className="product-image"
-                          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                        />
-                      )}
-                    </Grid>
-                  ))}
-                  <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel>Active</InputLabel>
-                      <Select
-                        value={productData.isActive}
-                        onChange={(e) => handleFieldChange('isActive', e.target.value)}
-                      >
-                        <MenuItem value={true}>Yes</MenuItem>
-                        <MenuItem value={false}>No</MenuItem>
-                      </Select>
+                      {statusError && <Typography color="error">{statusError}</Typography>}
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleUpdateClick}
-                    >
-                      Apply the changes to DB
-                    </Button>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                    />
                   </Grid>
                 </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: '20px' }}
+                  onClick={handleUpdateClick}
+                >
+                  Apply the changes to db
+                </Button>
               </Paper>
             </div>
           </main>
@@ -328,6 +277,7 @@ const UpdateProductTeam = () => {
       <Footer />
     </div>
   );
+
 };
 
-export default UpdateProductTeam;
+export default UpdateDriverTeam;

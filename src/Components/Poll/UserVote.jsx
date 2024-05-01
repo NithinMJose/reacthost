@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import Footer from '../LoginSignup/Footer';
 import UserNavbar from '../LoginSignup/UserNavbar';
-import Option1Image from '../Assets/a.jpg';
-import Option2Image from '../Assets/a.jpg';
-import Option3Image from '../Assets/a.jpg';
+import Option1Image from '../Assets/poll1.png';
+import Option2Image from '../Assets/poll2.png';
+import Option3Image from '../Assets/poll3.png';
 import jwt_decode from 'jwt-decode';
 import { BASE_URL } from '../../config';
 

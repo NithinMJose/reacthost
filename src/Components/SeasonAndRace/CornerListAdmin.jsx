@@ -76,58 +76,73 @@ const CornerListAdmin = () => {
       return <p>Loading corner data...</p>;
     }
 
-    let serialNumber = 1;
-
     // Filter cornerData based on the selected season year
-    console.log("Season year", selectedSeason);
-    console.log("season Year", cornerData[0].seasonYear);
     const filteredCornerData = cornerData.filter(
       (corner) => corner.seasonYear === parseInt(selectedSeason)
     );
 
-    if (filteredCornerData.length === 0) {
+    // Group the filtered corner data by race name
+    // print a line to distinguish between the two snippets
+    const groupedCornerData = filteredCornerData.reduce((acc, corner) => {
+      if (!acc[corner.race.raceName]) {
+        acc[corner.race.raceName] = [];
+      }
+      acc[corner.race.raceName].push(corner);
+      return acc;
+    }, {});
+
+    if (Object.keys(groupedCornerData).length === 0) {
       return <p>No data available for the selected season.</p>;
     }
 
     return (
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ width: '5%' }}>SL No</TableCell>
-              <TableCell style={{ width: '15%' }}>Corner Number</TableCell>
-              <TableCell style={{ width: '15%' }}>Corner Capacity</TableCell>
-              <TableCell style={{ width: '15%' }}>Season</TableCell>
-              <TableCell style={{ width: '20%' }}>Race Name</TableCell>
-              <TableCell style={{ width: '15%' }}>Available Capacity</TableCell>
-              <TableCell style={{ width: '15%' }}>Manage</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredCornerData.map((corner) => (
-              <TableRow key={corner.cornerId}>
-                <TableCell>{serialNumber++}</TableCell>
-                <TableCell>{corner.cornerNumber}</TableCell>
-                <TableCell>{corner.cornerCapacity}</TableCell>
-                <TableCell>{corner.seasonYear}</TableCell>
-                <TableCell>{corner.race ? corner.race.raceName : ''}</TableCell>
-                <TableCell>{corner.availableCapacity}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleManageCorner(corner.cornerId)}
-                  >
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <>
+        {Object.entries(groupedCornerData).map(([raceName, corners]) => (
+          <div key={raceName}>
+            <hr style={{ marginTop: '50px' }}></hr>
+            <h2>{raceName}</h2>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ width: '5%' }}>SL No</TableCell>
+                    <TableCell style={{ width: '15%' }}>Corner Number</TableCell>
+                    <TableCell style={{ width: '15%' }}>Corner Capacity</TableCell>
+                    <TableCell style={{ width: '15%' }}>Season</TableCell>
+                    <TableCell style={{ width: '20%' }}>Race Name</TableCell>
+                    <TableCell style={{ width: '15%' }}>Available Capacity</TableCell>
+                    <TableCell style={{ width: '15%' }}>Manage</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {corners.map((corner, index) => (
+                    <TableRow key={corner.cornerId}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{corner.cornerNumber}</TableCell>
+                      <TableCell>{corner.cornerCapacity}</TableCell>
+                      <TableCell>{corner.seasonYear}</TableCell>
+                      <TableCell>{corner.race ? corner.race.raceName : ''}</TableCell>
+                      <TableCell>{corner.availableCapacity}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleManageCorner(corner.cornerId)}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        ))}
+      </>
     );
   };
+
 
 
   return (
@@ -139,16 +154,33 @@ const CornerListAdmin = () => {
       <br />
       <h1>Corner List</h1>
       <div className="SeasonAndRaceSelection">
-        <p style={{ display: 'inline-block', marginRight: '10px' }}>Select Season: </p>
-        <select value={selectedSeason} onChange={handleSeasonChange} style={{ display: 'inline-block' }}>
+        <p style={{ display: 'inline-block', marginRight: '10px', fontSize: '30px' }}>Select Season: </p>
+        <select
+          value={selectedSeason}
+          onChange={handleSeasonChange}
+          style={{
+            display: 'inline-block',
+            minWidth: '150px',
+            padding: '8px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            backgroundColor: '#f9f9f9',
+            fontSize: '16px',
+          }}
+        >
           {seasonData &&
             seasonData.map((season) => (
-              <option key={season.seasonId} value={season.year.toString()}>
+              <option
+                key={season.seasonId}
+                value={season.year.toString()}
+                style={{ backgroundColor: '#fff', color: '#333' }}
+              >
                 {season.year}
               </option>
             ))}
         </select>
       </div>
+
       {renderCornerData()}
       <br />
       <Footer />

@@ -4,9 +4,9 @@ import { Typography, Paper, CircularProgress, Grid, Card, CardContent, CardMedia
 import { styled } from '@mui/system';
 import { BASE_URL } from '../../config';
 
-import Option1Image from '../Assets/a.jpg';
-import Option2Image from '../Assets/a.jpg';
-import Option3Image from '../Assets/a.jpg';
+import Option1Image from '../Assets/poll1.png';
+import Option2Image from '../Assets/poll2.png';
+import Option3Image from '../Assets/poll3.png';
 import Footer from '../LoginSignup/Footer';
 import UserNavbar from '../LoginSignup/UserNavbar';
 
@@ -15,7 +15,7 @@ const ResultCard = styled(Card)({
   overflow: 'visible',
   transition: 'transform 0.3s',
   '&:hover': {
-    transform: 'scale(1.05)',
+    transform: 'scale(1.01)',
   },
 });
 

@@ -48,7 +48,18 @@ const AddPoll = () => {
     if (!value || value.length < 5) {
       setQuestionError('Question should be at least 5 characters long');
       return false;
-    } else {
+    }
+    // else if length is greater than 100
+    else if (value.length > 100) {
+      setQuestionError('Question should be at most 100 characters long');
+      return false;
+    }
+    // need atleast 5 characters (white space is not considered as a character)
+    else if (value.trim().length < 5) {
+      setQuestionError('Question should be at least 5 characters long');
+      return false;
+    }
+    else {
       setQuestionError('');
       return true;
     }
@@ -58,17 +69,41 @@ const AddPoll = () => {
     if (!value || value.length === 0) {
       setOption1Error('Option1 is required');
       return false;
-    } else {
+    }
+    // need atleast 3 characters (white space is not considered as a character)
+    else if (value.trim().length < 3) {
+      setOption1Error('Option1 should be at least 3 characters long');
+      return false;
+    }
+    // maximum 15 characters
+    else if (value.length > 15) {
+      setOption1Error('Option1 should be at most 15 characters long');
+      return false;
+    }
+
+    else {
       setOption1Error('');
       return true;
     }
+
   };
 
   const validateOption2 = (value) => {
     if (!value || value.length === 0) {
       setOption2Error('Option2 is required');
       return false;
-    } else {
+    }
+    // need atleast 3 characters (white space is not considered as a character)
+    else if (value.trim().length < 3) {
+      setOption2Error('Option2 should be at least 3 characters long');
+      return false;
+    }
+    // maximum 15 characters
+    else if (value.length > 15) {
+      setOption2Error('Option2 should be at most 15 characters long');
+      return false;
+    }
+    else {
       setOption2Error('');
       return true;
     }
@@ -78,19 +113,39 @@ const AddPoll = () => {
     if (!value || value.length === 0) {
       setOption3Error('Option3 is required');
       return false;
-    } else {
+    }
+    // need atleast 3 characters (white space is not considered as a character)
+    else if (value.trim().length < 3) {
+      setOption3Error('Option3 should be at least 3 characters long');
+      return false;
+    }
+    // maximum 15 characters
+    else if (value.length > 15) {
+      setOption3Error('Option3 should be at most 15 characters long');
+      return false;
+    }
+    else {
       setOption3Error('');
       return true;
     }
   };
 
   const validatePollingDate = (value) => {
-    // You can add additional validation for polling date if needed
-    // For now, it checks if the value is not empty
     if (!value) {
       setPollingDateError('Polling Date is required');
       return false;
-    } else {
+    }
+    // check if the date is within a month from today
+    else if (new Date(value) < new Date()) {
+      setPollingDateError('Please check the date within a month from today');
+      return false;
+    }
+    // check if the date time is in the past even atleast a second
+    else if (new Date(value) < new Date(new Date().getTime() + 1000)) {
+      setPollingDateError('Please check the date within a month from today');
+      return false;
+    }
+    else {
       setPollingDateError('');
       return true;
     }
@@ -131,14 +186,22 @@ const AddPoll = () => {
           toast.success('Poll added successfully');
           navigate('/PollList');
           // You may choose to navigate back to the poll list or perform any other actions
+        } else if (createPollResponse.status === 400) {
+          const errorData = await createPollResponse.json();
+          if (errorData === 'DateNotSuitable') {
+            toast.error('Please check the date within a month from today');
+          } else {
+            console.error('Poll creation failed:', errorData);
+            toast.error('Poll creation failed: Please check the date within a month from today');
+          }
         } else {
           const errorData = await createPollResponse.json();
-          console.error('Poll creation failed:', errorData);
-          toast.error('Poll creation failed');
+          console.error('Poll creation failed:Please check the date within a month from today', errorData);
+          toast.error('Poll creation failed : Please check the date within a month from today');
         }
       } catch (error) {
         console.error('Poll creation failed:', error);
-        toast.error('Poll creation failed');
+        toast.error('Poll creation failed : Please check the date within a month from today');
       } finally {
         setLoading(false);
       }
@@ -146,6 +209,7 @@ const AddPoll = () => {
       toast.error('Please fill in all required fields and correct validation errors.');
     }
   };
+
 
   return (
     <div>

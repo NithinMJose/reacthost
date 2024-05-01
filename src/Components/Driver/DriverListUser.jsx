@@ -11,7 +11,10 @@ const DriverListUser = () => {
       try {
         const response = await fetch(`${BASE_URL}/api/Driver/GetDrivers`);
         const data = await response.json();
-        setDriverList(data);
+        // Filter drivers with status 'active'
+        const activeDrivers = data.filter(driver => driver.status === 'active');
+        setDriverList(activeDrivers);
+        console.log('Data received is :', activeDrivers);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -34,6 +37,9 @@ const DriverListUser = () => {
             <h2 className="driver-name">{driver.name}</h2>
             <p className="driver-details">
             {driver.description}
+            </p>
+            <p className="Team-Name">
+              Team Name: {driver.teamName}
             </p>
           </div>
         ))}

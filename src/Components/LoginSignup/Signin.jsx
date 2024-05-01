@@ -94,30 +94,30 @@ const Signin = () => {
         localStorage.setItem('jwtToken', response.data.token);
         console.log(response.data.token);
 
-        // Parse the token to get the RoleId and Status
-        const tokenPayload = jwt_decode(response.data.token);
-        const roleId = tokenPayload['RoleId'];
-        const status = tokenPayload['Status'];
-        const teamId = tokenPayload['teamId'];
-        console.log(roleId);
-        console.log(status);
-        console.log(teamId);
+          // Parse the token to get the RoleId and Status
+          const tokenPayload = jwt_decode(response.data.token);
+          const roleId = tokenPayload['RoleId'];
+          const status = tokenPayload['Status'];
+          const teamId = tokenPayload['teamId'];
+          console.log(roleId);
+          console.log(status);
+          console.log(teamId);
 
-        if (roleId === "Team") {
-          if (status === "active") {
-            toast.success('Login successful');
-            console.log('SUCCESSFUL LOGIN');
-            navigate('/');
-          } else if (status === "inactive") {
-            toast.error('Account has not been activated yet. Complete the profile to activate the account');
-            navigate('/');
-          }
+          if (roleId === "Team") {
+            if (status === "active") {
+              toast.success('Login successful');
+              console.log('SUCCESSFUL LOGIN');
+              navigate('/');
+                } else if (status === "not_updated") {
+                  toast.error('Account has not been activated yet. Complete the profile to activate the account');
+                  navigate('/');
+                } else if (status === "inactive") {
+                  toast.error('Account is inactive. Contact admin for details');
+              }
+            }
+        } else {
+          toast.error('Password is incorrect');
         }
-      } else if (response.data.status === "inactive") {
-        toast.error('Account has been banned. Contact Admin for details');
-      } else {
-        toast.error('Password is incorrect');
-      }
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 401) {
@@ -127,6 +127,7 @@ const Signin = () => {
       }
     }
   };
+
 
   const handleDeliveryCompanyLogin = async () => {
     try {

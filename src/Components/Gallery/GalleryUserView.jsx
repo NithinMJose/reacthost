@@ -7,6 +7,9 @@ import { BASE_URL } from '../../config';
 
 const StyledContainer = styled(Container)`
   margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: -10px;
+  min-width: 100%;
 `;
 
 const StyledCard = styled(Card)`
@@ -18,12 +21,12 @@ const StyledCard = styled(Card)`
   transition: transform 0.2s;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 `;
 
 const StyledCardMedia = styled(CardMedia)`
-  height: 200px;
+  height: 225px;
   cursor: pointer;
 `;
 
