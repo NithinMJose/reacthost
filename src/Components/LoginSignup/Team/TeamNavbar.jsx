@@ -58,7 +58,7 @@ function TeamNavbar() {
           </div>
           <ul className="navbar-links">
             {/* Conditionally render the "Update the Profile ASAP" link */}
-            {status === 'inactive' && (
+            {status === 'not_updated' && (
               <li className="nav-item">
                 <Link to="/TeamViewProfile" className="UpdateMsg">Update the Profile ASAP</Link>
               </li>

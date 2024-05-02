@@ -73,8 +73,8 @@ const AddProductTeam = () => {
     }
 
     // Check if the product name length is within the limit
-    if (value.length > 15) {
-      setProductNameError('Product name must be at most 15 characters long');
+    if (value.length > 25) {
+      setProductNameError('Product name must be at most 25 characters long');
       return false;
     }
 
@@ -140,8 +140,8 @@ const AddProductTeam = () => {
     }
 
     //maximum 300 characters
-    if (value.length > 300) {
-      setDescriptionError('Description must be at most 300 characters long');
+    if (value.length > 500) {
+      setDescriptionError('Description must be at most 500 characters long');
       return false;
     }
     else {

@@ -86,6 +86,10 @@ const AddTeam = () => {
   return (
     <div>
       <AdminNavbar />
+      <br />
+      <br />
+      <br />
+      <br />
       <Container className="outerSetup" maxWidth="550px" width="100%">
         <div style={{ display: 'flex' }}>
           {/* Main Content */}
