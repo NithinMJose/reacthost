@@ -94,7 +94,7 @@ const TeamSidebar = () => {
               <ListItemText primary="View Selling History" />
             </ListItem>
             <ListItem button className={styles.listItem} onClick={() => navigate('/TeamSellingReport')}>
-              <ListItemText primary="Reort Generation" />
+              <ListItemText primary="Report Generation" />
             </ListItem>
             
           </List>

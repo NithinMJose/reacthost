@@ -24,12 +24,13 @@ const F1HistoryUserView = () => {
   }, []);
 
   return (
-    <div>
+    <div className="history-page">
       <UserNavbar />
       <div className="history-container">
         {historyData.map((item) => (
           <div key={item.historyId} className="history-item">
             <h2 className="subheading">{item.heading}</h2>
+            {item.image && <img src={item.image} alt={item.heading} className="history-image" />}
             {item.paragraph && <p className="content">{item.paragraph}</p>}
           </div>
         ))}

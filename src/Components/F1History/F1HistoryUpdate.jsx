@@ -107,6 +107,8 @@ const F1HistoryUpdate = () => {
   return (
     <div>
       <AdminNavbar />
+      <br />
+      <br />
       <div className='HistoryUpdatewrapper'>
         <Container maxWidth="md" className="mt-4">
           <br />

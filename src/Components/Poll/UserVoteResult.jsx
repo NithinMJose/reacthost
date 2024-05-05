@@ -86,8 +86,7 @@ const UserVoteResult = () => {
         </div>
       ) : (
         userDetails && pollDetails && (
-          <div>
-            <Typography variant="h4" style={{ marginBottom: '10px' }}>Thank You {userDetails.userName} for the Vote</Typography>
+              <div>
             <Typography variant="h3" style={{ marginBottom: '20px' }}>{pollDetails.question}</Typography>
             <Paper style={{ padding: '20px', margin: '20px 0', backgroundColor: '#f9f9f9' }}>
               <Typography variant="h5" style={{ marginBottom: '10px' }}>Results:</Typography>

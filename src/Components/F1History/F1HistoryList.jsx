@@ -23,6 +23,10 @@ const F1HistoryList = () => {
   return (
     <div>
       <AdminNavbar />
+      <br />
+      <br />
+      <br />
+      <br />
       <div className="f1-history-container">
         <div className="f1-history-content">
           <Typography variant="h4" color="primary" className="f1-history-heading">

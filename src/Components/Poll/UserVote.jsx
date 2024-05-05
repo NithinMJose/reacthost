@@ -27,53 +27,65 @@ const UserVote = () => {
   useEffect(() => {
     const fetchPollDetails = async () => {
       try {
-        const pollResponse = await fetch(`${BASE_URL}/api/Poll/GetPollById?id=${state.pollId}`);
-        const votesResponse = await fetch(`${BASE_URL}/api/Vote/GetVotesByPoll?pollId=${state.pollId}`);
+        if (state && state.pollId) {
+          const pollResponse = await fetch(`${BASE_URL}/api/Poll/GetPollById?id=${state.pollId}`);
+          const votesResponse = await fetch(`${BASE_URL}/api/Vote/GetVotesByPoll?pollId=${state.pollId}`);
   
-        if (pollResponse.ok && votesResponse.ok) {
-          const pollData = await pollResponse.json();
-          const votesData = await votesResponse.json();
+          if (pollResponse.ok && votesResponse.ok) {
+            const pollData = await pollResponse.json();
+            const votesData = await votesResponse.json();
+
+            // Check if the user has already voted
+            const token = localStorage.getItem('jwtToken');
+            const decodedToken = jwt_decode(token);
+            const userId = parseInt(decodedToken.userId, 10);
+            console.log('UserId from token:', userId);
   
-          setPollDetails(pollData);
+            // Log the received data and votes
+            console.log('Received data:', pollData);
+            console.log('Votes from data:', votesData);
   
-          // Check if the user has already voted
-          const token = localStorage.getItem('jwtToken');
-          const decodedToken = jwt_decode(token);
-          const userId = parseInt(decodedToken.userId, 10);
-          console.log('UserId from token:', userId);
+            setPollDetails(pollData);
+
+            // Ensure that votesData is available before checking
+            const userHasVoted = votesData && votesData.some(vote => vote.userId === userId);
   
-          // Log the received data and votes
-          console.log('Received data:', pollData);
-          console.log('Votes from data:', votesData);
-  
-          // Ensure that votesData is available before checking
-          const userHasVoted = votesData && votesData.some(vote => vote.userId === userId);
-  
-          if (userHasVoted) {
-            console.log('User has already voted. Redirecting to UserVoteResult...');
-            navigate('/UserVoteResult', { replace: true, state: { pollId: state.pollId, userId } });
+            // Check if polling has ended
+            const currentDate = new Date();
+            const pollingDateTime = new Date(pollData.pollingDate);
+
+            if (pollingDateTime <= currentDate) {
+              console.log('Polling has ended. Redirecting to UserVoteResult...');
+              navigate('/UserVoteResult', { replace: true, state: { pollId: state.pollId, userId } });
+            } else {
+              console.log('Poll is still active. Proceed to vote.');
+            }
+
+            if (userHasVoted) {
+              console.log('User has already voted. Redirecting to UserVoteResult...');
+              navigate('/UserVoteResult', { replace: true, state: { pollId: state.pollId, userId } });
+            } else {
+              console.log('User has not voted yet.');
+            }
           } else {
-            console.log('User has not voted yet.');
+            console.error('Error fetching poll details 1:', pollResponse.status);
+            console.log('Poll response:', pollResponse.status);
+            console.error('Vote response :', votesResponse.status);
           }
         } else {
-          console.error('Error fetching poll details 1:', pollResponse.status);
-          console.log('Poll response:', pollResponse.status);
-          console.error('Vote response :', votesResponse.status);
+          console.error('No PollId received.');
+          // Handle the case when no PollId is received
         }
       } catch (error) {
         console.error('Error fetching poll details 2:', error);
       }
     };
-  
-    if (state && state.pollId) {
-      fetchPollDetails();
-    } else {
-      console.error('No PollId received.');
-      // Handle the case when no PollId is received
-    }
+
+    fetchPollDetails();
   }, [state, navigate]);
   
   
+
   const handleOptionClick = async (optionId) => {
     const token = localStorage.getItem('jwtToken');
     const decodedToken = jwt_decode(token);

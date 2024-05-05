@@ -259,7 +259,6 @@ const ProductDetails = () => {
                 <button className="buy-now-button" onClick={handleBuyNow}>Buy Now</button>
                 <p className='ShippingText'>Shipping Details</p>
                 <p className="ShippingDetailsDisplay">Free Shipping</p>
-                <p className='ReturnText'>Return Policy: 7 Days</p>
                 <div className="shipping-info">
                   <p>Your item will be shipped on the next business day after your order and will reach you within 7 days.</p>
                   <p>An authorized delivery person will be contacting you using the contact details provided during checkout.</p>

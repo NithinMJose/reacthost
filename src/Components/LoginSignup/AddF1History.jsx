@@ -50,6 +50,10 @@ const AddF1History = () => {
     return (
         <div className='AddF1Historywrapper'>
             <AdminNavbar />
+            <br />
+            <br />
+            <br />
+            <br />
 
             <div className='AddF1History'>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
