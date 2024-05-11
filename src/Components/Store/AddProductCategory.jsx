@@ -123,7 +123,7 @@ const AddProductCategory = () => {
                   variant="outlined"
                   component="span"
                   fullWidth
-                  style={{ height: '55px' }}
+                  style={{ height: '55px', marginTop: '10px' }}
                 >
                   Upload Image
                 </Button>

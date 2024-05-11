@@ -103,7 +103,7 @@ const GalleryUserView = () => {
             <img
                 src={`${BASE_URL}/images/${selectedImage.imageUrl}`}
               alt={selectedImage.caption}
-              style={{ width: 'auto', height: '100%' }}
+                style={{ maxWidth: '1200px', maxHeight: '1200px', width: 'auto', height: 'auto' }} // Set fixed width and height
             />
           )}
         </DialogContent>
